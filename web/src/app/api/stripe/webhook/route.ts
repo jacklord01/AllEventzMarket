@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import { issueTicket } from "@/features/tickets/tickets.service";
+import type Stripe from "stripe";
 
 export const runtime = "nodejs"; // ensure Node runtime (not edge)
 
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
 
   // Handle success
   if (event.type === "checkout.session.completed") {
-  const session = event.data.object as Record<string, unknown>;
+    const session = event.data.object as Stripe.Checkout.Session;
 
     const orderId = session.metadata?.orderId as string | undefined;
     if (!orderId) return NextResponse.json({ ok: true });
