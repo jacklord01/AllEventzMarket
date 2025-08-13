@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// Next.js expects the context param to be typed as { params: { [key: string]: string } }
+type Param<T extends string> = { params: Promise<Record<T, string>> };
+
 export async function GET(
-  req: NextRequest,
-  context: any // Use 'any' to ensure compatibility with Next.js build
+  _req: NextRequest,
+  { params }: Param<"eventId">
 ) {
-  const { eventId } = context.params;
+  const { eventId } = await params;
   if (!eventId) {
     return NextResponse.json({ error: "Missing eventId" }, { status: 400 });
   }
