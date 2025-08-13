@@ -1,1 +1,113 @@
-// Placeholder for Prisma schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  organizations Organization[]
+  tickets    Ticket[]
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  events    Event[]
+  users     User[]
+}
+
+model Event {
+  id        String   @id @default(uuid())
+  name      String
+  date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  organization Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+  seats     Seat[]
+  tickets   Ticket[]
+}
+
+model Seat {
+  id        String   @id @default(uuid())
+  label     String
+  section   String
+  status    String
+  price     Float
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+  orderItem OrderItem?
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  name      String
+  price     Float
+  currency  String
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orderItems OrderItem[]
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  orgId     String
+  totalAmount Float
+  paymentStatus String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  items     OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  seat      Seat?    @relation(fields: [seatId], references: [id])
+  seatId    String?
+  eventId   String?
+  quantity  Int
+  price     Float
+}
+
+model Ticket {
+  id        String   @id @default(uuid())
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  seat      Seat?    @relation(fields: [seatId], references: [id])
+  seatId    String?
+  createdAt DateTime @default(now())
+}
+
+model LottoDraw {
+  id        String   @id @default(uuid())
+  date      DateTime
+  entries   LottoEntry[]
+}
+
+model LottoEntry {
+  id        String   @id @default(uuid())
+  draw      LottoDraw @relation(fields: [drawId], references: [id])
+  drawId    String
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  numbers   String
+  createdAt DateTime @default(now())
+}
