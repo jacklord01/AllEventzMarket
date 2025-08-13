@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import { colors } from "@/styles/tokens";
 // You can replace this with your preferred tooltip library/component

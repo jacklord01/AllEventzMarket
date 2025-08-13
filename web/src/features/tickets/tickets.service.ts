@@ -1,5 +1,5 @@
-import { prisma } from "@/src/lib/prisma";
-import { qrDataUrl } from "@/src/lib/qr";
+import { prisma } from "@/lib/prisma";
+import { qrDataUrl } from "@/lib/qr";
 
 type CreateTicketInput = {
   orderId: string;

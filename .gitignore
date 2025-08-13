@@ -1,0 +1,3 @@
+.env
+SUPABASE_URL="https://scokdphjxriafbndgrbz.supabase.co"
+SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjb2tkcGhqeHJpYWZibmRncmJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwMzEzNTQsImV4cCI6MjA3MDYwNzM1NH0.0fPFS9qfriVKvN-sTVtF4uS2ddhKYvmN4Z8hrDAgQIE"
