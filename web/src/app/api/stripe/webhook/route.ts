@@ -7,6 +7,11 @@ import type Stripe from "stripe";
 
 export const runtime = "nodejs"; // ensure Node runtime (not edge)
 
+type OrderItemWithEvent = {
+  eventId?: string;
+  [key: string]: unknown;
+};
+
 export async function POST(req: NextRequest) {
   const sig = (await headers()).get("stripe-signature");
   if (!sig) return new NextResponse("Missing signature", { status: 400 });
@@ -17,8 +22,11 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig, secret);
-  } catch (err: any) {
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+    }
+    return new NextResponse("Webhook Error: Unknown error", { status: 400 });
   }
 
   if (event.type === "checkout.session.completed") {
@@ -54,11 +62,11 @@ export async function POST(req: NextRequest) {
             data: { status: "sold", reservedUntil: null },
           });
         }
-        const relatedEventId = (item as any).eventId as string | undefined;
+        const relatedEventId = (item as OrderItemWithEvent).eventId ?? product.id;
         for (let i = 0; i < item.quantity; i++) {
           await issueTicket({
             orderId,
-            eventId: relatedEventId ?? product.id,
+            eventId: relatedEventId,
             seatId: item.seatId ?? null,
           });
         }
