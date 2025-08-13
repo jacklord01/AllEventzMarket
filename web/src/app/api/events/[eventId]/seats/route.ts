@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 // Next.js expects the context param to be typed as { params: { [key: string]: string } }
 export async function GET(
   req: NextRequest,
-  context: { params: { eventId: string } }
+  context: any // Use 'any' to ensure compatibility with Next.js build
 ) {
   const { eventId } = context.params;
   if (!eventId) {
