@@ -1,7 +1,14 @@
 "use client";
 import { useState } from "react";
 
-export default function BuyButton({ orgId, userId, productId, seatId }: any) {
+interface BuyButtonProps {
+  orgId: string;
+  userId: string;
+  productId: string;
+  seatId?: string;
+}
+
+export default function BuyButton({ orgId, userId, productId, seatId }: BuyButtonProps) {
   const [loading, setLoading] = useState(false);
 
   async function onBuy() {

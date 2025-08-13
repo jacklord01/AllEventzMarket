@@ -1,6 +1,20 @@
 "use server";
 
-export async function createCheckoutSession(payload: any) {
+interface CheckoutPayload {
+  orgId: string;
+  userId: string;
+  items: Array<{
+    productId: string;
+    quantity: number;
+    seatId?: string | null;
+    eventId?: string;
+  }>;
+  successPath?: string;
+  cancelPath?: string;
+  orgStripeAccountId?: string;
+}
+
+export async function createCheckoutSession(payload: CheckoutPayload) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/stripe/checkout`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

@@ -15,13 +15,16 @@ export async function POST(req: NextRequest) {
   let event;
   try {
     event = stripe.webhooks.constructEvent(raw, sig, secret);
-  } catch (err: any) {
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+  } catch (err) {
+    if (err instanceof Error) {
+      return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+    }
+    return new NextResponse(`Webhook Error: Unknown error`, { status: 400 });
   }
 
   // Handle success
   if (event.type === "checkout.session.completed") {
-    const session = event.data.object as any;
+  const session = event.data.object as Record<string, unknown>;
 
     const orderId = session.metadata?.orderId as string | undefined;
     if (!orderId) return NextResponse.json({ ok: true });

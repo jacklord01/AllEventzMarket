@@ -1,3 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* optional brand tokens */
+:root {
+  --brand-sky:  #38bdf8; /* sky blue */
+  --brand-teal: #14b8a6; /* turquoise */
+  --brand-navy: #0f172a; /* navy */
+  --brand-green:#22c55e; /* bright green */
+}
+
 @import "tailwindcss";
 @import "tw-animate-css";
 

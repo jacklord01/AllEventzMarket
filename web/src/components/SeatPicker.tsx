@@ -10,7 +10,7 @@ export function SeatPicker({ eventId }: { eventId: string }) {
 
   return (
     <div className="grid grid-cols-4 gap-2">
-      {seats.map((seat: any) => (
+  {seats.map((seat: { id: string; isBooked: boolean; label?: string }) => (
         <button
           key={seat.id}
           className={`border rounded p-2 ${seat.isBooked ? "bg-gray-300" : "bg-green-200"}`}

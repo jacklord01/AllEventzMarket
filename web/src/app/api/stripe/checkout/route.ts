@@ -33,10 +33,10 @@ export async function POST(req: NextRequest) {
   }
 
   // Load products and compute totals (minimal example)
-  const productIds = items.map((i: any) => i.productId);
+  const productIds = items.map((i: { productId: string }) => i.productId);
   const products = await prisma.product.findMany({ where: { id: { in: productIds } } });
 
-  const lineItems: any[] = [];
+  const lineItems: Array<{ quantity: number; price_data: { currency: string; unit_amount: number; product_data: { name: string; description?: string } } }> = [];
   let total = 0;
 
   for (const it of items) {
@@ -60,10 +60,10 @@ export async function POST(req: NextRequest) {
     data: {
       userId,
       orgId,
-      totalAmount: (total / 100) as unknown as any, // Prisma Decimal
+  totalAmount: total / 100, // Prisma Decimal (assume number, adjust if needed)
       paymentStatus: "PENDING",
       items: {
-        create: items.map((it: any) => ({
+        create: items.map((it: { productId: string; seatId?: string | null; eventId?: string; quantity?: number }) => ({
           productId: it.productId,
           seatId: it.seatId ?? null,
           eventId: it.eventId, // Store eventId directly on OrderItem
