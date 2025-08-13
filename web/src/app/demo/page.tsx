@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Badge, Alert } from "@/components/ui/DesignSystem";
 import { LottoPicker } from "@/components/LottoPicker";
-import { SeatMap } from "@/components/SeatMap";
+import { SeatMap, Seat } from "@/components/SeatMap";
 import { Button } from "@/components/ui/Button";
 
 export default function DemoShowcase() {
@@ -11,10 +11,18 @@ export default function DemoShowcase() {
 
   // Example state for SeatMap
   const [selectedSeats, setSelectedSeats] = React.useState<string[]>([]);
-  const seats = Array.from({ length: 30 }, (_, i) => ({
+  // Explicitly type as Seat[]
+  const seats: Seat[] = Array.from({ length: 30 }, (_, i) => ({
     id: `S${i + 1}`,
     label: `${i + 1}`,
-    status: i % 7 === 0 ? "sold" : i % 5 === 0 ? "reserved" : selectedSeats.includes(`S${i + 1}`) ? "selected" : "available",
+    status:
+      i % 7 === 0
+        ? "sold"
+        : i % 5 === 0
+        ? "reserved"
+        : selectedSeats.includes(`S${i + 1}`)
+        ? "selected"
+        : "available",
     section: i < 10 ? "stalls" : i < 20 ? "balcony" : "vip",
     price: 20 + (i % 3) * 5,
   }));
@@ -30,17 +38,28 @@ export default function DemoShowcase() {
         />
         <div className="mt-2">
           <Badge color="accent">Selected: {selected.join(", ") || "None"}</Badge>
-          <Badge color="success">Always Include: {alwaysInclude.join(", ") || "None"}</Badge>
+          <Badge color="success">
+            Always Include: {alwaysInclude.join(", ") || "None"}
+          </Badge>
         </div>
       </Card>
       <Card title="Seat Map Demo">
         <SeatMap
           seats={seats}
           selected={selectedSeats}
-          onSelect={id => setSelectedSeats(sel => sel.includes(id) ? sel.filter(x => x !== id) : [...sel, id])}
+          onSelect={id =>
+            setSelectedSeats(sel =>
+              sel.includes(id)
+                ? sel.filter(x => x !== id)
+                : [...sel, id]
+            )
+          }
         />
         <div className="mt-2">
-          <Alert type="info">Click seats to select. Orange = reserved, Gray = sold, Green = VIP, Blue = Balcony.</Alert>
+          <Alert type="info">
+            Click seats to select. Orange = reserved, Gray = sold, Green = VIP,
+            Blue = Balcony.
+          </Alert>
           <Badge>Selected Seats: {selectedSeats.join(", ") || "None"}</Badge>
         </div>
       </Card>

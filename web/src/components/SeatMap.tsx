@@ -1,7 +1,7 @@
 import React from "react";
 import { colors } from "@/styles/tokens";
 
-type Seat = {
+export type Seat = {
   id: string;
   label: string;
   status: "available" | "selected" | "reserved" | "sold";
